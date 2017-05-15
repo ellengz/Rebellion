@@ -43,41 +43,40 @@ public class MapController {
 		//the cops arrest an active agent within the vision
 
 	}
-	public ArrayList getNeighbourInVision(int x, int y,int[][] map)
-	{
+	public ArrayList getNeighbourInVision(int x, int y,int[][] map){
 		ArrayList elements = new ArrayList();
 		ArrayList activePositions = new ArrayList();
 
 		int copNum = 0,activeNum = 0, quietNum = 0,jailedNum = 0;
 		int vision = Params.VISION;
-		int visionLength = (vision*2)+1;
-		int startingX = x-vision;
-		int startingY = y-vision;
-		if(startingX<0)
-			startingX = Params.MAX_MAP_XVALUE - (vision-x);
-		if(startingY<0)
-			startingY = Params.MAX_MAP_YVALUE - (vision-y);
+		int visionLength = (vision * 2) + 1;
+		int startingX = x - vision;
+		int startingY = y - vision;
+		if(startingX < 0)
+			startingX = Params.MAX_MAP_XVALUE - (vision - x);
+		if(startingY < 0)
+			startingY = Params.MAX_MAP_YVALUE - (vision - y);
 
-		for(int i = 0;i<visionLength;i++)
-		{
+		for(int i = 0; i < visionLength; i++) {
 
-			int tempX = (i+startingX)%Params.MAX_MAP_XVALUE;
-			for(int j = 0; j<visionLength;j++)
-			{
-				int tempY = (j+startingY)%Params.MAX_MAP_YVALUE;
-				boolean inVision = inVision(x,y,tempX,tempY,vision);
-
-				if (inVision && map[tempX][tempY] == 4)
+			int tempX = (i + startingX) % Params.MAX_MAP_XVALUE;
+			for (int j = 0; j < visionLength; j++) {
+				int tempY = (j + startingY) % Params.MAX_MAP_YVALUE;
+				boolean inVision = inVision(x, y, tempX, tempY, vision);
+				if (inVision && map[tempX][tempY] == Params.COP){
 					copNum++;
-				else if(inVision && map[tempX][tempY] ==3)
-					jailedNum++;
-				else if(inVision && map[tempX][tempY] ==2)
-				{ activePositions.add(tempX);activePositions.add(tempY);}
-				else if(inVision && map[tempX][tempY] ==1)
+			    }else if(inVision && map[tempX][tempY] == Params.JAILED_AGENT){
+				    jailedNum++;
+			    }else if(inVision && map[tempX][tempY] == Params.ACTIVE_AGENT){
+				    activePositions.add(tempX);
+				    activePositions.add(tempY);
+                    activeNum ++;
+		        }else if(inVision && map[tempX][tempY] == Params.QUIET_AGENT){
 					quietNum++;
+				}
 			}
 		}
-		elements.add(Params.EMPTY, activePositions);
+		elements.add(0, activePositions);
 		elements.add(Params.COP, copNum);
 		elements.add(Params.ACTIVE_AGENT, activeNum);
 		elements.add(Params.QUIET_AGENT, quietNum);
@@ -87,28 +86,25 @@ public class MapController {
 
 	}
 
-	public ArrayList getEmptySlotsInVision(int x, int y, int[][]map)
-	{
+	public ArrayList getEmptySlotsInVision(int x, int y, int[][]map){
 		int vision = Params.VISION;
 		ArrayList emptySlots = new ArrayList();
 
 
 		int visionLength = (vision*2)+1;
-		int startingX = x-vision;
+		int startingX = x - vision;
 		int startingY = y - vision;
 		if(startingX<0)
 			startingX = Params.MAX_MAP_XVALUE - (vision-x);
 		if(startingY<0)
 			startingY = Params.MAX_MAP_YVALUE - (vision-y);
 
-		for(int i = 0;i<visionLength;i++)
-		{
-			int tempX = (i+startingX)%Params.MAX_MAP_XVALUE;
-			for(int j = 0; j<visionLength;j++)
-			{
+		for(int i = 0; i < visionLength; i++){
+			int tempX = (i + startingX) % Params.MAX_MAP_XVALUE;
+			for(int j = 0; j < visionLength; j++){
 
-				int tempY = (j+startingY)%Params.MAX_MAP_YVALUE;
-				boolean inVision = inVision(x,y,tempX,tempY,vision);
+				int tempY = (j + startingY) % Params.MAX_MAP_YVALUE;
+				boolean inVision = inVision(x, y, tempX, tempY, vision);
 
 				boolean isEmpty = map[tempX][tempY] == 0;
 
@@ -126,8 +122,7 @@ public class MapController {
 		return emptySlots;
 	}
 
-	private boolean inVision(int startingX,int startingY, int checkX, int checkY, int vision)
-	{
+	private boolean inVision(int startingX,int startingY, int checkX, int checkY, int vision){
 		boolean inVision = false;
 		double distanceOneX = Math.abs(startingX-checkX);
 		double distanceOneY = Math.abs(startingY-checkY);
@@ -149,8 +144,7 @@ public class MapController {
 	}
 
 
-	public void display()
-	{
+	public void display(){
 		for(int i =0;i< Params.MAX_MAP_XVALUE;i++)
 		{
 			for(int j = 0; j<Params.MAX_MAP_YVALUE;j++)

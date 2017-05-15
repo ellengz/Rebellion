@@ -73,13 +73,10 @@ public class Agent {
 	 * a un-jailed agent moves every turn
 	 * @param map
 	 */
-	public void moveAgent(int map[][])
-	{
-		//	System.out.println("move agent");
-		ArrayList emptySlots  = new MapController().getEmptySlotsInVision(this.getPositionX(), this.getPositionY(), map);
-		//System.out.println(emptySlots+" ----------");
-		if (emptySlots.size()>0)
-		{
+	public void moveAgent(int map[][]){
+		ArrayList emptySlots  = new MapController().getEmptySlotsInVision(
+				this.getPositionX(), this.getPositionY(), map);
+		if (emptySlots.size()>0){
 			int moveTo = randomGenerator.nextInt(emptySlots.size());
 			if(moveTo%2!=0)
 				moveTo = moveTo-1;
@@ -113,7 +110,7 @@ public class Agent {
 				= this.perceivedHardship * (1 - Params.GOVERNMENT_LEGITIMACY);
 
 		//decide if an agent turns to active or not
-		if(grievance - this.riskAversion * eArrestProbability > Params.THRESHOLD ){
+		if(grievance-this.riskAversion * eArrestProbability > Params.THRESHOLD){
 			this.isActive = true;
 			map[this.getPositionX()][this.getPositionY()] = 2;
 		}else{
