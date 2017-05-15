@@ -106,7 +106,7 @@ public class Agent {
 		//the possibility of an agent to be arrested
 		System.out.println(copNum + "------" + activeNum);
 		double eArrestProbability
-				= 1 - Math.exp(- Params.K_PARAM * Math.floor(copNum/activeNum));
+				= 1 - Math.exp(- Params.K_PARAM * Math.round(copNum/activeNum));
 
 		//the grievance of an agent
 		double grievance
