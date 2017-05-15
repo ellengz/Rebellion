@@ -63,17 +63,24 @@ public class MapController {
 			for (int j = 0; j < visionLength; j++) {
 				int tempY = (j + startingY) % Params.MAX_MAP_YVALUE;
 				boolean inVision = inVision(x, y, tempX, tempY, vision);
-				if (inVision && map[tempX][tempY] == Params.COP){
-					copNum++;
-			    }else if(inVision && map[tempX][tempY] == Params.JAILED_AGENT){
-				    jailedNum++;
-			    }else if(inVision && map[tempX][tempY] == Params.ACTIVE_AGENT){
-				    activePositions.add(tempX);
-				    activePositions.add(tempY);
-                    activeNum ++;
-		        }else if(inVision && map[tempX][tempY] == Params.QUIET_AGENT){
-					quietNum++;
-				}
+                if (inVision){
+                    switch (map[tempX][tempY]){
+                        case Params.COP:
+                            copNum++;
+                            break;
+                        case Params.JAILED_AGENT:
+                            jailedNum++;
+                            break;
+                        case Params.ACTIVE_AGENT:
+                            activePositions.add(tempX);
+                            activePositions.add(tempY);
+                            activeNum ++;
+                            break;
+                        case Params.QUIET_AGENT:
+                            quietNum++;
+                            break;
+                    }
+                }
 			}
 		}
 		elements.add(0, activePositions);
