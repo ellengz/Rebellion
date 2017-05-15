@@ -1,0 +1,33 @@
+*referring to "checked"
+
+Params *
+
+------------- Agent --------------
+
+setRebellion *
+moveAgent
+
+---------- MapController ---------
+
+getNeighbourInVision *
+getEmptySlotsInVision
+inVision
+
+-------------- Cop ---------------
+moveCop
+arrestAgent
+
+
+------------ Simulator -----------
+setup
+moveAll
+
+------------- ShowMap ------------
+draw
+
+
+
+
+
+
+
