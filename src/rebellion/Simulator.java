@@ -46,7 +46,7 @@ public class Simulator {
 	    int	totalPossiblePopulation = Params.MAX_MAP_XVALUE * Params.MAX_MAP_YVALUE;
 	    int numberOfAgents = (int) (totalPossiblePopulation*Params.AGENT_DENSITY)/100;
 	    int numberOfCops =(int) (totalPossiblePopulation*Params.COP_DENSITY)/100;		
-		int totalPopulation = numberOfAgents+numberOfCops;		
+		int totalPopulation = numberOfAgents + numberOfCops;
 		
 		int[] mapLocations = new Random().ints(0, totalPossiblePopulation).distinct().limit(totalPopulation).toArray();
 		
@@ -57,7 +57,7 @@ public class Simulator {
 			int y = mapLocations[i]/Params.MAX_MAP_YVALUE;
 			if(i<numberOfAgents)
 			{
-				map[x][y] = 1;
+				map[x][y] = Params.QUIET_AGENT;
 				Agent agent = new Agent(i+1);
 				agent.setPositionX(x);
 				agent.setPositionY(y);
@@ -67,7 +67,7 @@ public class Simulator {
 			}
 			else
 			{
-				map[x][y] = 4;				
+				map[x][y] = Params.COP;
 				Cop cop = new Cop();
 				cop.setId(i+numberOfAgents+1);
 				cop.setPositionX(x);

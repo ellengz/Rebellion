@@ -84,10 +84,10 @@ public class MapController {
 			}
 		}
 		elements.add(0, activePositions);
-		elements.add(Params.COP, copNum);
-		elements.add(Params.ACTIVE_AGENT, activeNum);
-		elements.add(Params.QUIET_AGENT, quietNum);
-		elements.add(Params.JAILED_AGENT, jailedNum);
+		elements.add(1, quietNum);
+		elements.add(2, activeNum);
+		elements.add(3, jailedNum);
+		elements.add(4, copNum);
 
 		return elements;
 
