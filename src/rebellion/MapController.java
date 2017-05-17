@@ -62,7 +62,7 @@ public class MapController {
 			int tempX = (i + startingX) % Params.MAX_MAP_XVALUE;
 			for (int j = 0; j < visionLength; j++) {
 				int tempY = (j + startingY) % Params.MAX_MAP_YVALUE;
-				boolean inVision = inVision(x, y, tempX, tempY, vision);
+				boolean inVision = inVision(x, y, tempX, tempY);
                 if (inVision){
                     switch (map[tempX][tempY]){
                         case Params.COP:
@@ -111,7 +111,7 @@ public class MapController {
 			for(int j = 0; j < visionLength; j++){
 
 				int tempY = (j + startingY) % Params.MAX_MAP_YVALUE;
-				boolean inVision = inVision(x, y, tempX, tempY, vision);
+				boolean inVision = inVision(x, y, tempX, tempY);
 
 				boolean isEmpty = map[tempX][tempY] == 0;
 
@@ -129,25 +129,25 @@ public class MapController {
 		return emptySlots;
 	}
 
-	private boolean inVision(int startingX,int startingY, int checkX, int checkY, int vision){
-		boolean inVision = false;
-		double distanceOneX = Math.abs(startingX-checkX);
-		double distanceOneY = Math.abs(startingY-checkY);
-		double maxX = Math.max(startingY, checkX);
-		double maxY = Math.max(startingY, checkY);
-		double minX = Math.min(startingX, checkX);
-		double minY = Math.min(startingY, checkY);
+    /**
+     * check whether the target patch is within the vision
+     * @param startingX
+     * @param startingY
+     * @param checkX
+     * @param checkY
+     * @return boolean
+     */
+	private boolean inVision(int startingX,int startingY,int checkX,int checkY){
 
-		double distanceTwoX = Params.MAX_MAP_XVALUE - maxX-1+minX;
-		double distanceTwoY = Params.MAX_MAP_YVALUE - maxY-1+minY;
-		double distanceXX = Math.min(distanceOneX, distanceTwoX);
-		double distanceYY = Math.min(distanceOneY, distanceTwoY);
+		double distanceX = Math.min(Math.abs(startingX-checkX),
+                Params.MAX_MAP_XVALUE - Math.abs(startingX-checkX));
 
-		double radiusDistance = Math.sqrt(((distanceXX)*(distanceXX))+((distanceYY)*(distanceYY)));
-		if(radiusDistance<=vision)
-			inVision = true;
+        double distanceY = Math.min(Math.abs(startingY-checkY),
+                Params.MAX_MAP_YVALUE - Math.abs(startingY-checkY));
 
-		return inVision;
+		double radiusDistance = Math.sqrt(Math.pow(distanceX, 2) +
+                                          Math.pow(distanceY, 2));
+		return(radiusDistance <= Params.VISION);
 	}
 
 

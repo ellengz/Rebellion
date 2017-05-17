@@ -29,14 +29,16 @@ public class Simulator {
 		ob.setup();
 		ob.moveAll(allPopulation);
 		//ob.setNums();
-		new ShowMap().draw(map);
-		for(int i =0 ;i<10;i++)
+		//new ShowMap().draw(map);
+		for(int i =0 ;i<60;i++)
 		{
 			//try{Thread.sleep(2000);}catch(Exception e){}
-	 //    ob.moveAll(allPopulation);		
+	        ob.moveAll(allPopulation);
+            ob.takeActions(allPopulation);
 	     
-	   //  new ShowMap().draw(map);
+
 		}
+		//new ShowMap().draw(map);
 	}
 
 		
