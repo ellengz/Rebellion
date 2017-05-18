@@ -41,18 +41,21 @@ public class Agent {
     }
 
     /**
-     * move to a empty slot when the agent is quiet or active
+     * move to an empty slot when the agent is quiet or active
+     * count down the jail terms when the agent is jailed
      * @param emptySlots
      */
-    public void move(ArrayList emptySlots){
+    public void move(ArrayList<int[]> emptySlots){
 
-        if (this.state == (Params.QUIET_AGENT | Params.ACTIVE_AGENT)){
-
+        if (this.jailTerm == 0){
             if(emptySlots.size() > 0){
-
-                //this.positionX = x;
-                //this.positionY = y;
+                // choose a random position
+                int moveTo = randomGenerator.nextInt(emptySlots.size());
+                this.setPositionX(emptySlots.get(moveTo)[0]);
+                this.setPositionY(emptySlots.get(moveTo)[1]);
             }
+        }else{
+            this.jailTerm --;
         }
     }
 
@@ -61,9 +64,10 @@ public class Agent {
      * according to the neighbours and params
      * @param neighbours
      */
-    public void takeAction(ArrayList neighbours){
+    public void stateUpdate(ArrayList neighbours){
 
-        if(this.state == Params.QUIET_AGENT){
+        //if(this.state == Params.QUIET_AGENT){
+        if(this.jailTerm == 0){
 
             int copNum = (int) neighbours.get(Params.COP);
             int activeNum = (int) neighbours.get(Params.ACTIVE_AGENT) + 1;
@@ -77,12 +81,27 @@ public class Agent {
             double grievance
                     = this.perceivedHardship * (1 - Params.GOVERNMENT_LEGITIMACY);
 
-            //decide if an agent turns to active or not
+            //decide if an agent turns from quite to active or vice verse
             if(grievance - this.riskAversion * eArrestProbability>Params.THRESHOLD){
                 this.state = Params.ACTIVE_AGENT;
+            }else {
+                this.state = Params.QUIET_AGENT;
             }
         }
 
+    }
+
+    public int getPositionX() {
+        return positionX;
+    }
+    public void setPositionX(int positionX) {
+        this.positionX = positionX;
+    }
+    public int getPositionY() {
+        return positionY;
+    }
+    public void setPositionY(int positionY) {
+        this.positionY = positionY;
     }
 
 

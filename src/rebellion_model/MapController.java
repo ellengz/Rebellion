@@ -25,6 +25,10 @@ public class MapController {
     public void moveAll(){
 
 
+        for(Agent agent : agents){
+
+        }
+
     }
 
     public void takeActionAll(){
@@ -43,10 +47,10 @@ public class MapController {
 
         // get a updated map
         for(Agent agent : agents){
-            new_map[agent.positionX][agent.positionY] = agent.state;
+            new_map[agent.getPositionX()][agent.getPositionY()] = agent.state;
         }
         for(Cop cop : cops){
-            new_map[cop.positionX][cop.positionY] = Params.COP;
+            //new_map[cop.positionX][cop.positionY] = Params.COP;
         }
         // update the map
         this.map = new_map;
@@ -56,12 +60,47 @@ public class MapController {
     private ArrayList getNeighbours(int x, int y, int[][] map){
 
 
+
         return null;
     }
 
+    /**
+     * get the empty slots in current map
+     * @param x
+     * @param y
+     * @param map
+     * @return a list of empty slots
+     */
     private ArrayList getEmptySlots(int x, int y, int[][] map){
 
-        return null;
+        int vision = Params.VISION;
+        ArrayList<int[]> emptySlots = new ArrayList<>();
+
+        int visionLength = (vision*2)+1;
+        int startingX = x - vision;
+        int startingY = y - vision;
+        if(startingX<0)
+            startingX = Params.MAX_MAP_XVALUE - (vision-x);
+        if(startingY<0)
+            startingY = Params.MAX_MAP_YVALUE - (vision-y);
+
+        for(int i = 0; i < visionLength; i++){
+            // handel the boundary of the map
+            int tempX = (i + startingX) % Params.MAX_MAP_XVALUE;
+            for(int j = 0; j < visionLength; j++){
+                // handel the boundary the map
+                int tempY = (j + startingY) % Params.MAX_MAP_YVALUE;
+                // find an empty position
+                if(inVision(x, y, tempX, tempY)){
+                    if(map[tempX][tempY] == Params.EMPTY){
+                        emptySlots.add(new int[]{tempX, tempY});
+                    }
+                }
+            }
+        }
+
+        return emptySlots;
+
     }
 
     /**
@@ -83,6 +122,6 @@ public class MapController {
         double radiusDistance = Math.sqrt(Math.pow(distanceX, 2) +
                 Math.pow(distanceY, 2));
 
-        return(radiusDistance <= Params.VISION);
+        return (radiusDistance <= Params.VISION);
     }
 }
