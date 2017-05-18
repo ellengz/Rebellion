@@ -60,13 +60,12 @@ public class Agent {
     }
 
     /**
-     * decide if an agent turns to active or not when its quiet,
+     * decide if an agent turns to active/ quite,
      * according to the neighbours and params
      * @param neighbours
      */
     public void stateUpdate(ArrayList neighbours){
 
-        //if(this.state == Params.QUIET_AGENT){
         if(this.jailTerm == 0){
 
             int copNum = (int) neighbours.get(Params.COP);
@@ -75,17 +74,17 @@ public class Agent {
             //the possibility of an agent to be arrested
             System.out.println(copNum + "------" + activeNum);
             double eArrestProbability
-                    = 1 - Math.exp(- Params.K_PARAM * Math.round(copNum/activeNum));
+                = 1 - Math.exp(- Params.K_PARAM * Math.round(copNum/activeNum));
 
             //the grievance of an agent
             double grievance
-                    = this.perceivedHardship * (1 - Params.GOVERNMENT_LEGITIMACY);
+                = this.perceivedHardship * (1 - Params.GOVERNMENT_LEGITIMACY);
 
             //decide if an agent turns from quite to active or vice verse
-            if(grievance - this.riskAversion * eArrestProbability>Params.THRESHOLD){
-                this.state = Params.ACTIVE_AGENT;
+            if(grievance-this.riskAversion*eArrestProbability>Params.THRESHOLD){
+                this.setState(Params.ACTIVE_AGENT);
             }else {
-                this.state = Params.QUIET_AGENT;
+                this.setState(Params.QUIET_AGENT);
             }
         }
 
@@ -103,6 +102,7 @@ public class Agent {
     public void setPositionY(int positionY) {
         this.positionY = positionY;
     }
+    public void setState(int state){ this.state = state; }
 
 
 
