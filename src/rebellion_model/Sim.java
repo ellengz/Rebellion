@@ -65,25 +65,29 @@ public class Sim {
             mapController.moveAll();
             mapController.takeActionAll();
 
-//            for(int i = 0; i < map.length; i++){
-//                for(int j = 0; j < map[i].length; j++){
-//                    if(map[i][j] == Params.QUIET_AGENT) qn++;
-//                    if(map[i][j] == Params.ACTIVE_AGENT) an++;
-//                    if(map[i][j] == Params.JAILED_AGENT) jn++;
-//                    if(map[i][j] == Params.COP) cn++;
-//                }
-//            }
-
-            for(Agent agent : agents){
-                if(agent.getState() == 1){
-                    qn++;
-                }else if(agent.getState() == 2){
-                    an++;
-                } else if(agent.getState() == 3) {
-                    jn++;
+            for(int i = 0; i < map.length; i++){
+                for(int j = 0; j < map[i].length; j++){
+                    if(map[i][j] == Params.QUIET_AGENT) qn++;
+                    if(map[i][j] == Params.ACTIVE_AGENT) an++;
+                    if(map[i][j] == Params.JAILED_AGENT) jn++;
+                    if(map[i][j] == Params.COP) cn++;
                 }
-
             }
+
+//            for(Agent agent : agents){
+//                if(agent.getState() == 1){
+//                    qn++;
+//                }else if(agent.getState() == 2){
+//                    an++;
+//                } else if(agent.getState() == 3) {
+//                    jn++;
+//                }
+//
+//            }
+//
+//            for(Cop cop : cops){
+//                cn ++;
+//            }
 
 
             System.out.println("Q:" + qn + "  A:" + an + "  J:" + jn + "  C:" + cn);

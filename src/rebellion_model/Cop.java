@@ -39,7 +39,10 @@ public class Cop {
         if(activePositions.size() > 0){
             // has at least one active agent in vision
             int target = randomGenerator.nextInt(activePositions.size());
-            return activePositions.get(target);
+            int[] target_p = activePositions.get(target);
+            this.setPositionX(target_p[0]);
+            this.setPositionY(target_p[1]);
+            return target_p;
 
         }else{
             return null;

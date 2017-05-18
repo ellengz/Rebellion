@@ -60,7 +60,7 @@ public class Agent {
      * according to the neighbours and params
      * @param neighbours
      */
-    public void updateState(ArrayList neighbours){
+    public void ifRebellion(ArrayList neighbours){
 
         if(this.jailTerm == 0){
 
@@ -86,7 +86,7 @@ public class Agent {
     }
 
     public void setJailed(){
-        this.jailTerm = new Random().nextInt(Params.MAX_JAIL_TERM + 1);
+        this.jailTerm = randomGenerator.nextInt(Params.MAX_JAIL_TERM + 1);
         this.setState(Params.JAILED_AGENT);
     }
 

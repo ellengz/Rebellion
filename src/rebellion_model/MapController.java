@@ -1,7 +1,6 @@
 package rebellion_model;
 
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 /**
  * Created by ellen on 18/5/17.
@@ -26,12 +25,10 @@ public class MapController {
 
     public void moveAll(){
 
-        Boolean emptyNeighbours = true;
-
         for(Agent agent : agents){
             int x = agent.getPositionX();
             int y = agent.getPositionY();
-            agent.move(getNeighbours(x, y, emptyNeighbours));
+            agent.move(getEmptySlots(x, y));
             // update the map for next agent to move
             updateOneMove(x, y, agent.getPositionX(), agent.getPositionY(),
                                                       agent.getState());
@@ -40,7 +37,7 @@ public class MapController {
         for(Cop cop : cops){
             int x = cop.getPositionX();
             int y = cop.getPositionY();
-            cop.move(getNeighbours(x, y, emptyNeighbours));
+            cop.move(getEmptySlots(x, y));
             // update the map for next cop to move
             updateOneMove(x, y, cop.getPositionX(), cop.getPositionY(),
                                                     Params.COP);
@@ -54,19 +51,17 @@ public class MapController {
 
     public void takeActionAll(){
 
-        Boolean non_emptyNeighbours = false;
-
         for(Agent agent : agents) {
             int x = agent.getPositionX();
             int y = agent.getPositionY();
             // each agent updates its state according to its new neighbourhood
-            agent.updateState(getNeighbours(x, y, non_emptyNeighbours));
+            agent.ifRebellion(getNeighbours(x, y));
         }
 
         for(Cop cop : cops){
             int x = cop.getPositionX();
             int y = cop.getPositionY();
-            int[] target = cop.arrest(getNeighbours(x, y, non_emptyNeighbours));
+            int[] target = cop.arrest(getNeighbours(x, y));
             // arrest an agent in the target position
             if(target != null){
                 //set that agent to jail
@@ -77,8 +72,11 @@ public class MapController {
                     }
                 }
                 //update the map
+                //cop moves to the target agent position
+                updateOneMove(x, y, target[0], target[1], Params.COP);
                 //agent still in the same position, but state updates to jailed
-                updateOneMove(x, y, x, y, Params.JAILED_AGENT);
+                updateOneMove(target[0],target[1],target[0],target[1],
+                              Params.JAILED_AGENT);
             }
         }
 
@@ -119,20 +117,66 @@ public class MapController {
     }
 
     /**
-     * get neighbours of the agent
-     * can be empty slots, or sum of non-empty neighbours
+     * get the list of neighbours within the vision
      * @param x
      * @param y
-     * @param empty
-     * @return list of non-empty neighbours when empty is false
-     *          list of empty slots when empty is true
+     * @return a list of non-empty neighbours
      */
-    public ArrayList getNeighbours(int x, int y, boolean empty){
+    public ArrayList getNeighbours(int x, int y){
 
         // list of non-empty neighbours
         ArrayList neighbours = new ArrayList();
         // list of positions occupied by an active agent
         ArrayList<int[]> activePositions = new ArrayList<>();
+
+        int copNum = 0,activeNum = 0, quietNum = 0,jailedNum = 0;
+        int visionLength = (vision * 2) + 1;
+        int startingX = x - vision;
+        int startingY = y - vision;
+        if(startingX < 0)
+            startingX = Params.MAX_MAP_XVALUE - (vision - x);
+        if(startingY < 0)
+            startingY = Params.MAX_MAP_YVALUE - (vision - y);
+
+        for(int i = 0; i < visionLength; i++) {
+            int tempX = (i + startingX) % Params.MAX_MAP_XVALUE;
+            for (int j = 0; j < visionLength; j++) {
+                int tempY = (j + startingY) % Params.MAX_MAP_YVALUE;
+                // if the target position is within vision
+                if(inVision(x, y, tempX, tempY)){
+
+                    switch (map[tempX][tempY]){
+                        case Params.COP:
+                            copNum++; break;
+                        case Params.JAILED_AGENT:
+                            jailedNum++; break;
+                        case Params.ACTIVE_AGENT:
+                            activePositions.add(new int[]{tempX,tempY});
+                            activeNum ++; break;
+                        case Params.QUIET_AGENT:
+                            quietNum++; break;
+                        }
+                    }
+                }
+            }
+
+            neighbours.add(0, activePositions);
+            neighbours.add(1, quietNum);
+            neighbours.add(2, activeNum);
+            neighbours.add(3, jailedNum);
+            neighbours.add(4, copNum);
+            return neighbours;
+
+    }
+
+    /**
+     * get the list of empty slots within the vision
+     * @param x
+     * @param y
+     * @return a list of empty slots
+     */
+    public ArrayList<int[]> getEmptySlots(int x, int y){
+
         // list of empty slots
         ArrayList<int[]> emptySlots = new ArrayList<>();
 
@@ -151,39 +195,18 @@ public class MapController {
                 int tempY = (j + startingY) % Params.MAX_MAP_YVALUE;
                 // if the target position is within vision
                 if(inVision(x, y, tempX, tempY)){
-                    if(empty){
-                        // when empty slots are required
-                        if(map[tempX][tempY] == Params.EMPTY){
-                            emptySlots.add(new int[]{tempX, tempY});
-                        }
-                    }else{
-                        // when sum number of non-empty neighbours are required
-                        switch (map[tempX][tempY]){
-                            case Params.COP:
-                                copNum++; break;
-                            case Params.JAILED_AGENT:
-                                jailedNum++; break;
-                            case Params.ACTIVE_AGENT:
-                                activePositions.add(new int[]{tempX,tempY});
-                                activeNum ++; break;
-                            case Params.QUIET_AGENT:
-                                quietNum++; break;
-                        }
+                    if(map[tempX][tempY] == Params.EMPTY |
+                            map[tempX][tempY] == Params.JAILED_AGENT){
+                        emptySlots.add(new int[]{tempX,tempY});
                     }
                 }
             }
         }
-        if(empty){
-            return emptySlots;
-        }else{
-            neighbours.add(0, activePositions);
-            neighbours.add(1, quietNum);
-            neighbours.add(2, activeNum);
-            neighbours.add(3, jailedNum);
-            neighbours.add(4, copNum);
-            return neighbours;
-        }
+
+        return emptySlots;
     }
+
+
 
     /**
      * check if target is within the vision
@@ -206,4 +229,5 @@ public class MapController {
 
         return (radiusDistance <= vision);
     }
+
 }
