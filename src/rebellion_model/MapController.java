@@ -73,7 +73,7 @@ public class MapController {
                 }
                 //update the map
                 //cop moves to the target agent position
-                updateOneMove(x, y, target[0], target[1], Params.COP);
+                //updateOneMove(x, y, target[0], target[1], Params.COP);
                 //agent still in the same position, but state updates to jailed
                 updateOneMove(target[0],target[1],target[0],target[1],
                               Params.JAILED_AGENT);
@@ -194,9 +194,11 @@ public class MapController {
             for (int j = 0; j < visionLength; j++) {
                 int tempY = (j + startingY) % Params.MAX_MAP_YVALUE;
                 // if the target position is within vision
+                /**
+                 * should include jailed agent patch as well
+                 */
                 if(inVision(x, y, tempX, tempY)){
-                    if(map[tempX][tempY] == Params.EMPTY |
-                            map[tempX][tempY] == Params.JAILED_AGENT){
+                    if(map[tempX][tempY] == Params.EMPTY ){
                         emptySlots.add(new int[]{tempX,tempY});
                     }
                 }

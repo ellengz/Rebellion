@@ -12,8 +12,8 @@ public class Params {
     public final static int VISION = 7;
     public final static double COP_DENSITY = 4;
     public final static double AGENT_DENSITY = 70;
-    public final static int MAX_JAIL_TERM = 20;
-    public final static double GOVERNMENT_LEGITIMACY = 0.1;
+    public final static int MAX_JAIL_TERM = 30;
+    public final static double GOVERNMENT_LEGITIMACY = 0.82;
     public final static double K_PARAM = 2.3;
     public final static double THRESHOLD = 0.1;
     public final static int TICKS = 10;
