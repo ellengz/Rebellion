@@ -26,8 +26,18 @@ public class MapController {
 
     public void moveAll(){
 
-
+        Boolean emptyNeighbours = true;
         for(Agent agent : agents){
+            int x = agent.getPositionX();
+            int y = agent.getPositionY();
+            agent.move(getNeighbours(x, y, emptyNeighbours));
+            // update the map for next agent to move
+            updateOneMove(x, y, agent);
+        }
+
+        for(Cop cop : cops){
+            int x = cop.getPositionX();
+            int y = cop.getPositionY();
 
         }
 
@@ -35,8 +45,21 @@ public class MapController {
 
     public void takeActionAll(){
 
+        Boolean non_emptyNeighbours = false;
 
 
+
+    }
+
+    /**
+     * update the map after one move
+     * @param o_x
+     * @param o_y
+     * @param a
+     */
+    private void updateOneMove(int o_x, int o_y, Agent a){
+        map[o_x][o_y] = Params.EMPTY;
+        map[a.getPositionX()][a.getPositionY()] = a.getState();
     }
 
     /**
@@ -46,7 +69,6 @@ public class MapController {
 
         // initialize a new map with all 0 (empty state)
         int[][] new_map = {{Params.EMPTY}};
-
         // get a updated map
         for(Agent agent : agents){
             new_map[agent.getPositionX()][agent.getPositionY()] = agent.state;
@@ -64,12 +86,11 @@ public class MapController {
      * can be empty slots, or sum of non-empty neighbours
      * @param x
      * @param y
-     * @param map
      * @param empty
      * @return list of non-empty neighbours when empty is false
      *          list of empty slots when empty is true
      */
-    public ArrayList getNeighbours(int x, int y, int[][] map, boolean empty){
+    public ArrayList getNeighbours(int x, int y, boolean empty){
 
         // list of non-empty neighbours
         ArrayList neighbours = new ArrayList();

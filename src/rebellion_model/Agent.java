@@ -24,10 +24,6 @@ public class Agent {
     int positionY;
     //the state of an agent
     int state;
-    //private final static int INITIAL = 0;
-    //private final static int QUIET = 1;
-    //private final static int ACTIVE = 2;
-    //private final static int JAILED = 3;
 
     private Random randomGenerator = new Random();
 
@@ -101,6 +97,9 @@ public class Agent {
     }
     public void setPositionY(int positionY) {
         this.positionY = positionY;
+    }
+    public int getState() {
+        return state;
     }
     public void setState(int state){ this.state = state; }
 
