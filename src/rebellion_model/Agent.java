@@ -60,7 +60,7 @@ public class Agent {
      * according to the neighbours and params
      * @param neighbours
      */
-    public void stateUpdate(ArrayList neighbours){
+    public void updateState(ArrayList neighbours){
 
         if(this.jailTerm == 0){
 
@@ -68,7 +68,6 @@ public class Agent {
             int activeNum = (int) neighbours.get(Params.ACTIVE_AGENT) + 1;
 
             //the possibility of an agent to be arrested
-            System.out.println(copNum + "------" + activeNum);
             double eArrestProbability
                 = 1 - Math.exp(- Params.K_PARAM * Math.round(copNum/activeNum));
 
@@ -86,6 +85,14 @@ public class Agent {
 
     }
 
+    public void setJailed(){
+        this.jailTerm = new Random().nextInt(Params.MAX_JAIL_TERM + 1);
+        this.setState(Params.JAILED_AGENT);
+    }
+
+    public int getId() {
+        return id;
+    }
     public int getPositionX() {
         return positionX;
     }
@@ -103,6 +110,11 @@ public class Agent {
     }
     public void setState(int state){ this.state = state; }
 
-
+    public String toString(){
+        return id+"    "+String.format("%.15f", riskAversion) + "    " +
+                String.format("%.15f", perceivedHardship) + "    " +
+                String.format("%03d", positionX)+"    " +
+                String.format("%03d", positionY)+"    " + state;
+    }
 
 }

@@ -11,15 +11,15 @@ public class MapController {
     //a two-dimensional array that records the state of each position in the map:
     static int[][] map = new int[Params.MAX_MAP_XVALUE][Params.MAX_MAP_YVALUE];
     //a list that contains all the agents
-    ArrayList<Agent> agents = new ArrayList<Agent>();
+    ArrayList<Agent> agents = new ArrayList<>();
     //a list that contains all the cops
-    ArrayList<Cop> cops = new ArrayList<Cop>();
+    ArrayList<Cop> cops = new ArrayList<>();
     // vision
     final static int vision = Params.VISION;
 
     public MapController(int[][] map, ArrayList agents, ArrayList cops){
 
-        MapController.map = map;
+        this.map = map;
         this.agents = agents;
         this.cops = cops;
     }
@@ -27,19 +27,28 @@ public class MapController {
     public void moveAll(){
 
         Boolean emptyNeighbours = true;
+
         for(Agent agent : agents){
             int x = agent.getPositionX();
             int y = agent.getPositionY();
             agent.move(getNeighbours(x, y, emptyNeighbours));
             // update the map for next agent to move
-            updateOneMove(x, y, agent);
+            updateOneMove(x, y, agent.getPositionX(), agent.getPositionY(),
+                                                      agent.getState());
         }
 
         for(Cop cop : cops){
             int x = cop.getPositionX();
             int y = cop.getPositionY();
-
+            cop.move(getNeighbours(x, y, emptyNeighbours));
+            // update the map for next cop to move
+            updateOneMove(x, y, cop.getPositionX(), cop.getPositionY(),
+                                                    Params.COP);
+            //System.out.println(cop.toString());
         }
+
+        // update the whole map
+        //updateMap();
 
     }
 
@@ -47,19 +56,46 @@ public class MapController {
 
         Boolean non_emptyNeighbours = false;
 
+        for(Agent agent : agents) {
+            int x = agent.getPositionX();
+            int y = agent.getPositionY();
+            // each agent updates its state according to its new neighbourhood
+            agent.updateState(getNeighbours(x, y, non_emptyNeighbours));
+        }
 
+        for(Cop cop : cops){
+            int x = cop.getPositionX();
+            int y = cop.getPositionY();
+            int[] target = cop.arrest(getNeighbours(x, y, non_emptyNeighbours));
+            // arrest an agent in the target position
+            if(target != null){
+                //set that agent to jail
+                for(Agent agent : agents){
+                    if(agent.getPositionX() == target[0] &&
+                            agent.getPositionY() == target[1]){
+                        agent.setJailed();
+                    }
+                }
+                //update the map
+                //agent still in the same position, but state updates to jailed
+                updateOneMove(x, y, x, y, Params.JAILED_AGENT);
+            }
+        }
 
+        //updateMap();
     }
 
     /**
      * update the map after one move
-     * @param o_x
-     * @param o_y
-     * @param a
+     * @param oX
+     * @param oY
+     * @param nX
+     * @param nY
+     * @param state
      */
-    private void updateOneMove(int o_x, int o_y, Agent a){
-        map[o_x][o_y] = Params.EMPTY;
-        map[a.getPositionX()][a.getPositionY()] = a.getState();
+    private void updateOneMove(int oX, int oY, int nX, int nY, int state){
+        map[oX][oY] = Params.EMPTY;
+        map[nX][nY] = state;
     }
 
     /**
@@ -68,13 +104,14 @@ public class MapController {
     private void updateMap(){
 
         // initialize a new map with all 0 (empty state)
-        int[][] new_map = {{Params.EMPTY}};
+        int[][] new_map = new int[Params.MAX_MAP_XVALUE][Params.MAX_MAP_YVALUE];
+
         // get a updated map
         for(Agent agent : agents){
             new_map[agent.getPositionX()][agent.getPositionY()] = agent.state;
         }
         for(Cop cop : cops){
-            //new_map[cop.positionX][cop.positionY] = Params.COP;
+            new_map[cop.positionX][cop.positionY] = Params.COP;
         }
         // update the map
         map = new_map;

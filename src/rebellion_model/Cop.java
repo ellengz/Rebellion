@@ -33,6 +33,18 @@ public class Cop {
         }
     }
 
+    public int[] arrest(ArrayList neighbours){
+
+        ArrayList<int[]> activePositions = (ArrayList<int[]>) neighbours.get(0);
+        if(activePositions.size() > 0){
+            // has at least one active agent in vision
+            int target = randomGenerator.nextInt(activePositions.size());
+            return activePositions.get(target);
+
+        }else{
+            return null;
+        }
+    }
 
     public int getId() {
         return id;
@@ -48,5 +60,10 @@ public class Cop {
     }
     public void setPositionY(int positionY) {
         this.positionY = positionY;
+    }
+
+    public String toString(){
+        return id+"    " +String.format("%03d",positionX)+"    "
+                +String.format("%03d",positionY);
     }
 }
