@@ -60,7 +60,10 @@ public class Sim {
             int qn = 0;
             int an = 0;
             int jn = 0;
-            int cn = 0;
+
+            int qn1 = 0;
+            int an1 = 0;
+            int jn1 = 0;
 
             mapController.moveAll();
             mapController.takeActionAll();
@@ -70,29 +73,25 @@ public class Sim {
                     if(map[i][j] == Params.QUIET_AGENT) qn++;
                     if(map[i][j] == Params.ACTIVE_AGENT) an++;
                     if(map[i][j] == Params.JAILED_AGENT) jn++;
-                    if(map[i][j] == Params.COP) cn++;
                 }
             }
 
-//            for(Agent agent : agents){
-//                if(agent.getState() == 1){
-//                    qn++;
-//                }else if(agent.getState() == 2){
-//                    an++;
-//                } else if(agent.getState() == 3) {
-//                    jn++;
-//                }
-//
-//            }
-//
-//            for(Cop cop : cops){
-//                cn ++;
-//            }
+            for(Agent agent : agents){
+                if(agent.getState() == 1){
+                    qn1++;
+                }else if(agent.getState() == 2){
+                    an1++;
+                } else if(agent.getState() == 3) {
+                    jn1++;
+                }
 
+            }
 
-            System.out.println("Q:" + qn + "  A:" + an + "  J:" + jn + "  C:" + cn);
-            System.out.println(qn+an+jn);
-            System.out.println(cops.size());
+            System.out.println("Q:" + qn + "  A:" + an + "  J:" + jn);
+            //System.out.println(qn+an+jn);
+            //System.out.println(cops.size());
+            System.out.println("Q:" + qn1 + "  A:" + an1 + "  J:" + jn1);
+
 
             tick --;
 
