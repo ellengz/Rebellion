@@ -14,10 +14,12 @@ public class MapController {
     ArrayList<Agent> agents = new ArrayList<Agent>();
     //a list that contains all the cops
     ArrayList<Cop> cops = new ArrayList<Cop>();
+    // vision
+    final static int vision = Params.VISION;
 
     public MapController(int[][] map, ArrayList agents, ArrayList cops){
 
-        this.map = map;
+        MapController.map = map;
         this.agents = agents;
         this.cops = cops;
     }
@@ -53,54 +55,76 @@ public class MapController {
             //new_map[cop.positionX][cop.positionY] = Params.COP;
         }
         // update the map
-        this.map = new_map;
+        map = new_map;
 
-    }
-
-    private ArrayList getNeighbours(int x, int y, int[][] map){
-
-
-
-        return null;
     }
 
     /**
-     * get the empty slots in current map
+     * get neighbours of the agent
+     * can be empty slots, or sum of non-empty neighbours
      * @param x
      * @param y
      * @param map
-     * @return a list of empty slots
+     * @param empty
+     * @return list of non-empty neighbours when empty is false
+     *          list of empty slots when empty is true
      */
-    private ArrayList getEmptySlots(int x, int y, int[][] map){
+    public ArrayList getNeighbours(int x, int y, int[][] map, boolean empty){
 
-        int vision = Params.VISION;
+        // list of non-empty neighbours
+        ArrayList neighbours = new ArrayList();
+        // list of positions occupied by an active agent
+        ArrayList<int[]> activePositions = new ArrayList<>();
+        // list of empty slots
         ArrayList<int[]> emptySlots = new ArrayList<>();
 
-        int visionLength = (vision*2)+1;
+        int copNum = 0,activeNum = 0, quietNum = 0,jailedNum = 0;
+        int visionLength = (vision * 2) + 1;
         int startingX = x - vision;
         int startingY = y - vision;
-        if(startingX<0)
-            startingX = Params.MAX_MAP_XVALUE - (vision-x);
-        if(startingY<0)
-            startingY = Params.MAX_MAP_YVALUE - (vision-y);
+        if(startingX < 0)
+            startingX = Params.MAX_MAP_XVALUE - (vision - x);
+        if(startingY < 0)
+            startingY = Params.MAX_MAP_YVALUE - (vision - y);
 
-        for(int i = 0; i < visionLength; i++){
-            // handel the boundary of the map
+        for(int i = 0; i < visionLength; i++) {
             int tempX = (i + startingX) % Params.MAX_MAP_XVALUE;
-            for(int j = 0; j < visionLength; j++){
-                // handel the boundary the map
+            for (int j = 0; j < visionLength; j++) {
                 int tempY = (j + startingY) % Params.MAX_MAP_YVALUE;
-                // find an empty position
+                // if the target position is within vision
                 if(inVision(x, y, tempX, tempY)){
-                    if(map[tempX][tempY] == Params.EMPTY){
-                        emptySlots.add(new int[]{tempX, tempY});
+                    if(empty){
+                        // when empty slots are required
+                        if(map[tempX][tempY] == Params.EMPTY){
+                            emptySlots.add(new int[]{tempX, tempY});
+                        }
+                    }else{
+                        // when sum number of non-empty neighbours are required
+                        switch (map[tempX][tempY]){
+                            case Params.COP:
+                                copNum++; break;
+                            case Params.JAILED_AGENT:
+                                jailedNum++; break;
+                            case Params.ACTIVE_AGENT:
+                                activePositions.add(new int[]{tempX,tempY});
+                                activeNum ++; break;
+                            case Params.QUIET_AGENT:
+                                quietNum++; break;
+                        }
                     }
                 }
             }
         }
-
-        return emptySlots;
-
+        if(empty){
+            return emptySlots;
+        }else{
+            neighbours.add(0, activePositions);
+            neighbours.add(1, quietNum);
+            neighbours.add(2, activeNum);
+            neighbours.add(3, jailedNum);
+            neighbours.add(4, copNum);
+            return neighbours;
+        }
     }
 
     /**
@@ -122,6 +146,6 @@ public class MapController {
         double radiusDistance = Math.sqrt(Math.pow(distanceX, 2) +
                 Math.pow(distanceY, 2));
 
-        return (radiusDistance <= Params.VISION);
+        return (radiusDistance <= vision);
     }
 }
