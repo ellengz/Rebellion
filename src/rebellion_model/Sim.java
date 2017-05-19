@@ -31,20 +31,20 @@ public class Sim {
             int y = randomGenerator.nextInt(Params.MAX_MAP_YVALUE);
             if (map[x][y] == Params.EMPTY) {
                 if(counter < numberOfAgents) {
-                    map[x][y] = Params.QUIET_AGENT;
                     // new agent
                     Agent agent = new Agent(counter);
                     agent.setPositionX(x);
                     agent.setPositionY(y);
                     agent.setState(Params.QUIET_AGENT);
                     agents.add(agent);
+                    map[x][y] = Params.QUIET_AGENT;
                 }else{
-                    map[x][y] = Params.COP;
                     // new cop
                     Cop cop = new Cop(counter - numberOfAgents);
                     cop.setPositionX(x);
                     cop.setPositionY(y);
                     cops.add(cop);
+                    map[x][y] = Params.COP;
                 }
                 counter ++;
             }
@@ -65,9 +65,6 @@ public class Sim {
             int an1 = 0;
             int jn1 = 0;
 
-            mapController.moveAll();
-            mapController.takeActionAll();
-
             for(int i = 0; i < map.length; i++){
                 for(int j = 0; j < map[i].length; j++){
                     if(map[i][j] == Params.QUIET_AGENT) qn++;
@@ -87,10 +84,13 @@ public class Sim {
 
             }
 
-            System.out.println("Q:" + qn + "  A:" + an + "  J:" + jn);
+            mapController.moveAll();
+            mapController.takeActionAll();
+
+            System.out.println("map   Q:" + qn + "  A:" + an + "  J:" + jn);
             //System.out.println(qn+an+jn);
             //System.out.println(cops.size());
-            System.out.println("Q:" + qn1 + "  A:" + an1 + "  J:" + jn1);
+            System.out.println("lists Q:" + qn1 + "  A:" + an1 + "  J:" + jn1);
 
 
             tick --;

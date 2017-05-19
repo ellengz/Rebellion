@@ -56,14 +56,17 @@ public class MapController {
             int y = agent.getPositionY();
             // each agent updates its state according to its new neighbourhood
             agent.ifRebellion(getNeighbours(x, y));
+            updateOneMove(x, y, x, y, agent.getState());
         }
 
         for(Cop cop : cops){
             int x = cop.getPositionX();
             int y = cop.getPositionY();
             int[] target = cop.arrest(getNeighbours(x, y));
+
             // arrest an agent in the target position
             if(target != null){
+
                 //set that agent to jail
                 for(Agent agent : agents){
                     if(agent.getPositionX() == target[0] &&
@@ -79,8 +82,6 @@ public class MapController {
                               Params.JAILED_AGENT);
             }
         }
-
-        //updateMap();
     }
 
     /**
