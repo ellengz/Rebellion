@@ -1,5 +1,8 @@
 package rebellion_model;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -53,59 +56,121 @@ public class Sim {
         // the map controller to update map
         MapController mapController = new MapController(map, agents, cops);
 
-        int tick = Params.TICKS;
+        PrintWriter pw = null;
+        try {
+            pw = new PrintWriter(new File("test.csv"));
 
-        while(tick > 0){
+            StringBuilder sb = new StringBuilder();
 
-            int qn = 0;
-            int an = 0;
-            int jn = 0;
+            sb.append("tick");
+            sb.append(',');
+            sb.append("quiet agent");
+            sb.append(',');
+            sb.append("active agent");
+            sb.append(',');
+            sb.append("jailed agent");
+            sb.append('\n');
 
-            int qn1 = 0;
-            int an1 = 0;
-            int jn1 = 0;
 
-            for(int i = 0; i < map.length; i++){
-                for(int j = 0; j < map[i].length; j++){
-                    if(map[i][j] == Params.QUIET_AGENT) qn++;
-                    if(map[i][j] == Params.ACTIVE_AGENT) an++;
-                    if(map[i][j] == Params.JAILED_AGENT) jn++;
+            int tick = Params.TICKS;
+
+            while(tick > 0) {
+
+                int qn = 0;
+                int an = 0;
+                int jn = 0;
+
+                int qn1 = 0;
+                int an1 = 0;
+                int jn1 = 0;
+
+                for(int i = 0; i < map.length; i++){
+                    for(int j = 0; j < map[i].length; j++){
+
+                        switch (map[i][j]){
+                            case Params.JAILED_AGENT:
+                                jn++; break;
+                            case Params.ACTIVE_AGENT:
+                                an ++; break;
+                            case Params.QUIET_AGENT:
+                                qn++; break;
+                            // combined state
+                            case Params.COP + Params.JAILED_AGENT:
+                                jn ++; break;
+                            case Params.QUIET_AGENT + Params.JAILED_AGENT:
+                                qn ++; jn ++; break;
+                            case Params.ACTIVE_AGENT + Params.JAILED_AGENT:
+                                an ++; jn ++; break;
+                            //case Params.ACTIVE_AGENT + Params.ACTIVE_AGENT:
+
+                        }
+
+                    }
                 }
+
+                for (Agent agent : agents) {
+                    if (agent.getState() == 2) {
+                        qn1++;
+                    } else if (agent.getState() == 3) {
+                        an1++;
+                    } else if (agent.getState() == 4) {
+                        jn1++;
+                    }
+
+                }
+
+                mapController.moveAll();
+                mapController.takeActionAll();
+
+                //System.out.println("map   Q:" + qn + "  A:" + an + "  J:" + jn);
+                //System.out.println(qn+an+jn);
+                //System.out.println(cops.size());
+                //System.out.println("lists Q:" + qn1 + "  A:" + an1 + "  J:" + jn1);
+
+                sb.append(Params.TICKS-tick);
+                sb.append(',');
+                sb.append(qn1);
+                sb.append(',');
+                sb.append(an1);
+                sb.append(',');
+                sb.append(jn1);
+                sb.append(',');
+                sb.append(qn);
+                sb.append(',');
+                sb.append(an);
+                sb.append(',');
+                sb.append(jn);
+                sb.append('\n');
+
+                tick--;
+
+
             }
 
-            for(Agent agent : agents){
-                if(agent.getState() == 1){
-                    qn1++;
-                }else if(agent.getState() == 2){
-                    an1++;
-                } else if(agent.getState() == 3) {
-                    jn1++;
-                }
-
-            }
-
-            mapController.moveAll();
-            mapController.takeActionAll();
-
-            System.out.println("map   Q:" + qn + "  A:" + an + "  J:" + jn);
-            //System.out.println(qn+an+jn);
-            //System.out.println(cops.size());
-            System.out.println("lists Q:" + qn1 + "  A:" + an1 + "  J:" + jn1);
 
 
-            tick --;
+            pw.write(sb.toString());
 
+
+
+
+            pw.close();
+            System.out.println("done!");
+
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
 
 
+
+
+
+
+
+
+
+
     }
-
-
-    public void printCSV(){
-
-
-
-
-    }
-
 }
