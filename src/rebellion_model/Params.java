@@ -9,7 +9,7 @@ package rebellion_model;
 public class Params {
     public final static int MAX_MAP_XVALUE = 40;
     public final static int MAX_MAP_YVALUE = 40;
-    public final static int VISION = 7;
+    public final static double VISION = 7;
     public final static double COP_DENSITY = 4;
     public final static double AGENT_DENSITY = 70;
     public final static int MAX_JAIL_TERM = 30;

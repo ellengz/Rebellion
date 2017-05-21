@@ -14,7 +14,7 @@ public class MapController {
     //a list that contains all the cops
     ArrayList<Cop> cops = new ArrayList<>();
     // vision
-    final static int vision = Params.VISION;
+    final static double vision = Params.VISION;
 
     public MapController(int[][] map, ArrayList agents, ArrayList cops){
 
@@ -123,18 +123,18 @@ public class MapController {
         ArrayList<int[]> activePositions = new ArrayList<>();
 
         int copNum = 0,activeNum = 0, quietNum = 0,jailedNum = 0;
-        int visionLength = (vision * 2) + 1;
-        int startingX = x - vision;
-        int startingY = y - vision;
+        double visionLength = (vision * 2) + 1;
+        double startingX = x - vision;
+        double startingY = y - vision;
         if(startingX < 0)
             startingX = Params.MAX_MAP_XVALUE - (vision - x);
         if(startingY < 0)
             startingY = Params.MAX_MAP_YVALUE - (vision - y);
 
         for(int i = 0; i < visionLength; i++) {
-            int tempX = (i + startingX) % Params.MAX_MAP_XVALUE;
+            int tempX = (int) ((i + startingX) % Params.MAX_MAP_XVALUE);
             for (int j = 0; j < visionLength; j++) {
-                int tempY = (j + startingY) % Params.MAX_MAP_YVALUE;
+                int tempY = (int) ((j + startingY) % Params.MAX_MAP_YVALUE);
                 // if the target position is within vision
                 if(inVision(x, y, tempX, tempY)){
 
@@ -181,18 +181,18 @@ public class MapController {
         // list of empty slots
         ArrayList<int[]> emptySlots = new ArrayList<>();
 
-        int visionLength = (vision * 2) + 1;
-        int startingX = x - vision;
-        int startingY = y - vision;
+        double visionLength = (vision * 2) + 1;
+        double startingX = x - vision;
+        double startingY = y - vision;
         if(startingX < 0)
             startingX = Params.MAX_MAP_XVALUE - (vision - x);
         if(startingY < 0)
             startingY = Params.MAX_MAP_YVALUE - (vision - y);
 
         for(int i = 0; i < visionLength; i++) {
-            int tempX = (i + startingX) % Params.MAX_MAP_XVALUE;
+            int tempX = (int) ((i + startingX) % Params.MAX_MAP_XVALUE);
             for (int j = 0; j < visionLength; j++) {
-                int tempY = (j + startingY) % Params.MAX_MAP_YVALUE;
+                int tempY = (int) ((j + startingY) % Params.MAX_MAP_YVALUE);
                 // if the target position is within vision
                 if(inVision(x, y, tempX, tempY)){
                     if(map[tempX][tempY] == Params.EMPTY |

@@ -122,10 +122,10 @@ public class Sim {
                 mapController.moveAll();
                 mapController.takeActionAll();
 
-                //System.out.println("map   Q:" + qn + "  A:" + an + "  J:" + jn);
+                System.out.println("map   Q:" + qn + "  A:" + an + "  J:" + jn);
                 //System.out.println(qn+an+jn);
                 //System.out.println(cops.size());
-                //System.out.println("lists Q:" + qn1 + "  A:" + an1 + "  J:" + jn1);
+                System.out.println("lists Q:" + qn1 + "  A:" + an1 + "  J:" + jn1);
 
                 sb.append(Params.TICKS-tick);
                 sb.append(',');
