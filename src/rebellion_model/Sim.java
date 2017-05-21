@@ -74,46 +74,122 @@ public class Sim {
 
             int tick = Params.TICKS;
 
-            while(tick > 0) {
+            while (tick > 0) {
 
-                int qn = 0;
-                int an = 0;
-                int jn = 0;
+//                int qn = 0;
+//                int an = 0;
+//                int jn = 0;
+//
+//                for (Agent agent : agents) {
+//
+//                    switch(agent.getState()){
+//                        case Params.QUIET_AGENT: qn++; break;
+//                        case Params.ACTIVE_AGENT: an++; break;
+//                        case Params.JAILED_AGENT: jn++; break;
+//                    }
+//                }
+//
+//                mapController.updateJailTerm();
+//                mapController.moveAll();
+//                mapController.takeActionAll();
+//
+//                System.out.println("lists Q:" + qn + "  A:" + an + "  J:" + jn);
+//
+//                sb.append(Params.TICKS - tick);
+//                sb.append(',');
+//                sb.append(qn);
+//                sb.append(',');
+//                sb.append(an);
+//                sb.append(',');
+//                sb.append(jn);
+//                sb.append('\n');
+//
+//                tick--;
+
+                int quietNum = 0;
+                int activeNum = 0;
+                int jailedNum = 0;
 
                 int qn1 = 0;
                 int an1 = 0;
                 int jn1 = 0;
 
-                for(int i = 0; i < map.length; i++){
-                    for(int j = 0; j < map[i].length; j++){
+                for (int i = 0; i < map.length; i++) {
+                    for (int j = 0; j < map[i].length; j++) {
+//
+//                        switch (map[i][j]){
+//                            case Params.JAILED_AGENT:
+//                                jn++; break;
+//                            case Params.ACTIVE_AGENT:
+//                                an ++; break;
+//                            case Params.QUIET_AGENT:
+//                                qn++; break;
+//                            // combined state
+//                            case Params.COP + Params.JAILED_AGENT:
+//                                jn ++; break;
+//                            case Params.QUIET_AGENT + Params.JAILED_AGENT:
+//                                qn ++; jn ++; break;
+//                            case Params.ACTIVE_AGENT + Params.JAILED_AGENT:
+//                                an ++; jn ++; break;
+//                            //case Params.ACTIVE_AGENT + Params.ACTIVE_AGENT:
+//
+//                        }
 
-                        switch (map[i][j]){
-                            case Params.JAILED_AGENT:
-                                jn++; break;
-                            case Params.ACTIVE_AGENT:
-                                an ++; break;
-                            case Params.QUIET_AGENT:
-                                qn++; break;
-                            // combined state
-                            case Params.COP + Params.JAILED_AGENT:
-                                jn ++; break;
-                            case Params.QUIET_AGENT + Params.JAILED_AGENT:
-                                qn ++; jn ++; break;
-                            case Params.ACTIVE_AGENT + Params.JAILED_AGENT:
-                                an ++; jn ++; break;
-                            //case Params.ACTIVE_AGENT + Params.ACTIVE_AGENT:
 
+                        if (map[i][j] <= Params.JAILED_AGENT) {
+
+                            switch (map[i][j]) {
+                                case Params.JAILED_AGENT:
+                                    jailedNum++;
+                                    break;
+                                case Params.ACTIVE_AGENT:
+                                    activeNum++;
+                                    break;
+                                case Params.QUIET_AGENT:
+                                    quietNum++;
+                                    break;
+                            }
+                        } else if (map[i][j] <= 2*Params.JAILED_AGENT) {
+
+                            switch (map[i][j] - Params.JAILED_AGENT) {
+
+                                case Params.JAILED_AGENT:
+                                    jailedNum++;
+                                    break;
+                                case Params.ACTIVE_AGENT:
+                                    activeNum++;
+                                    break;
+                                case Params.QUIET_AGENT:
+                                    quietNum++;
+                                    break;
+                            }
+                            jailedNum++;
+
+                        } else {
+                            switch (map[i][j] - 2*Params.JAILED_AGENT) {
+                                case Params.JAILED_AGENT:
+                                    jailedNum++;
+                                    break;
+                                case Params.ACTIVE_AGENT:
+                                    activeNum++;
+                                    break;
+                                case Params.QUIET_AGENT:
+                                    quietNum++;
+                                    break;
+                            }
+
+                            jailedNum += 2;
                         }
 
                     }
                 }
 
                 for (Agent agent : agents) {
-                    if (agent.getState() == 2) {
+                    if (agent.getState() == Params.QUIET_AGENT) {
                         qn1++;
-                    } else if (agent.getState() == 3) {
+                    } else if (agent.getState() == Params.ACTIVE_AGENT) {
                         an1++;
-                    } else if (agent.getState() == 4) {
+                    } else if (agent.getState() == Params.JAILED_AGENT) {
                         jn1++;
                     }
 
@@ -121,13 +197,15 @@ public class Sim {
 
                 mapController.moveAll();
                 mapController.takeActionAll();
+                mapController.updateJailTerm();
 
-                System.out.println("map   Q:" + qn + "  A:" + an + "  J:" + jn);
+
+                System.out.println("map   Q:" + quietNum + "  A:" + activeNum + "  J:" + jailedNum);
                 //System.out.println(qn+an+jn);
                 //System.out.println(cops.size());
                 System.out.println("lists Q:" + qn1 + "  A:" + an1 + "  J:" + jn1);
 
-                sb.append(Params.TICKS-tick);
+                sb.append(Params.TICKS - tick);
                 sb.append(',');
                 sb.append(qn1);
                 sb.append(',');
@@ -135,25 +213,18 @@ public class Sim {
                 sb.append(',');
                 sb.append(jn1);
                 sb.append(',');
-                sb.append(qn);
+                sb.append(quietNum);
                 sb.append(',');
-                sb.append(an);
+                sb.append(activeNum);
                 sb.append(',');
-                sb.append(jn);
+                sb.append(jailedNum);
                 sb.append('\n');
 
                 tick--;
 
 
             }
-
-
-
             pw.write(sb.toString());
-
-
-
-
             pw.close();
             System.out.println("done!");
 

@@ -16,13 +16,13 @@ public class Params {
     public final static double GOVERNMENT_LEGITIMACY = 0.82;
     public final static double K_PARAM = 2.3;
     public final static double THRESHOLD = 0.1;
-    public final static int TICKS = 120;
+    public final static int TICKS = 500;
     // the state of a patch in the map, saying it's occupied by whom
     public final static int EMPTY = 0;
-    public final static int COP = 1;
-    public final static int QUIET_AGENT = 2;
-    public final static int ACTIVE_AGENT = 3;
-    public final static int JAILED_AGENT = 4;
+    public final static int COP = 4;
+    public final static int QUIET_AGENT = 5;
+    public final static int ACTIVE_AGENT = 6;
+    public final static int JAILED_AGENT = 7;
 
 
 

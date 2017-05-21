@@ -50,9 +50,11 @@ public class Agent {
                 this.setPositionX(emptySlots.get(moveTo)[0]);
                 this.setPositionY(emptySlots.get(moveTo)[1]);
             }
-        }else{
-            this.jailTerm --;
         }
+
+//        else{
+//            this.jailTerm --;
+//        }
     }
 
     /**
@@ -64,8 +66,8 @@ public class Agent {
 
         if(this.jailTerm == 0){
 
-            int copNum = (int) neighbours.get(Params.COP);
-            int activeNum = (int) neighbours.get(Params.ACTIVE_AGENT) + 1;
+            int copNum = (int) neighbours.get(1);
+            int activeNum = (int) neighbours.get(3) + 1;
 
             //the possibility of an agent to be arrested
             double eArrestProbability
@@ -82,6 +84,10 @@ public class Agent {
                 this.setState(Params.QUIET_AGENT);
             }
         }
+
+//        else{
+//            jailTerm --;
+//        }
 
     }
 
@@ -109,6 +115,8 @@ public class Agent {
         return state;
     }
     public void setState(int state){ this.state = state; }
+    public int getJailTerm() {return this.jailTerm; }
+    public void updateTerm() {this.jailTerm -=1;}
 
     public String toString(){
         return id+"    "+String.format("%.15f", riskAversion) + "    " +

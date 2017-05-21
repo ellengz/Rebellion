@@ -23,6 +23,29 @@ public class MapController {
         this.cops = cops;
     }
 
+    /**
+     * update jail term, if jail term decreases to 0, change the state to quiet
+     */
+
+    public void updateJailTerm(){
+
+        for(Agent agent : agents){
+
+            if(agent.getJailTerm() > 0) {
+                if (agent.getJailTerm() == 1) {
+                    // update state
+                    agent.setState(Params.QUIET_AGENT);
+                    // update map
+                    updateOneAction(agent.getPositionX(), agent.getPositionY(),
+                            Params.JAILED_AGENT, Params.QUIET_AGENT);
+                }
+                // update term
+                agent.updateTerm();
+
+            }
+        }
+    }
+
     public void moveAll(){
 
         for(Agent agent : agents){
@@ -138,24 +161,80 @@ public class MapController {
                 // if the target position is within vision
                 if(inVision(x, y, tempX, tempY)){
 
-                    switch (map[tempX][tempY]){
-                        case Params.COP:
-                            copNum++; break;
-                        case Params.JAILED_AGENT:
-                            jailedNum++; break;
-                        case Params.ACTIVE_AGENT:
-                            activePositions.add(new int[]{tempX,tempY});
-                            activeNum ++; break;
-                        case Params.QUIET_AGENT:
-                            quietNum++; break;
-                        // combined state
-                        case Params.COP + Params.JAILED_AGENT:
-                            copNum ++; jailedNum ++; break;
-                        case Params.QUIET_AGENT + Params.JAILED_AGENT:
-                            quietNum ++; jailedNum ++; break;
-                        case Params.ACTIVE_AGENT + Params.JAILED_AGENT:
-                            activeNum ++; jailedNum ++; break;
+                    if(map[tempX][tempY] <= Params.JAILED_AGENT){
+
+                        switch (map[tempX][tempY]) {
+                            case Params.COP:
+                                copNum++;
+                                break;
+                            case Params.JAILED_AGENT:
+                                jailedNum++;
+                                break;
+                            case Params.ACTIVE_AGENT:
+                                activePositions.add(new int[]{tempX, tempY});
+                                activeNum++;
+                                break;
+                            case Params.QUIET_AGENT:
+                                quietNum++;
+                                break;
                         }
+                    }else if(map[tempX][tempY] <= 2*Params.JAILED_AGENT){
+
+                        switch (map[tempX][tempY] - Params.JAILED_AGENT) {
+                            case Params.COP:
+                                copNum++;
+                                break;
+                            case Params.JAILED_AGENT:
+                                jailedNum ++;
+                                break;
+                            case Params.ACTIVE_AGENT:
+                                activePositions.add(new int[]{tempX, tempY});
+                                activeNum++;
+                                break;
+                            case Params.QUIET_AGENT:
+                                quietNum++;
+                                break;
+                        }
+                        jailedNum ++;
+
+                    }else {
+                        switch (map[tempX][tempY] - 2*Params.JAILED_AGENT) {
+                            case Params.COP:
+                                copNum++;
+                                break;
+                            case Params.JAILED_AGENT:
+                                jailedNum++;
+                                break;
+                            case Params.ACTIVE_AGENT:
+                                activePositions.add(new int[]{tempX, tempY});
+                                activeNum++;
+                                break;
+                            case Params.QUIET_AGENT:
+                                quietNum++;
+                                break;
+                        }
+
+                        jailedNum += 2;
+                    }
+
+//                    switch (map[tempX][tempY]){
+//                        case Params.COP:
+//                            copNum++; break;
+//                        case Params.JAILED_AGENT:
+//                            jailedNum++; break;
+//                        case Params.ACTIVE_AGENT:
+//                            activePositions.add(new int[]{tempX,tempY});
+//                            activeNum ++; break;
+//                        case Params.QUIET_AGENT:
+//                            quietNum++; break;
+//                        // combined state
+//                        case Params.COP + Params.JAILED_AGENT:
+//                            copNum ++; jailedNum ++; break;
+//                        case Params.QUIET_AGENT + Params.JAILED_AGENT:
+//                            quietNum ++; jailedNum ++; break;
+//                        case Params.ACTIVE_AGENT + Params.JAILED_AGENT:
+//                            activeNum ++; jailedNum ++; break;
+//                        }
                     }
                 }
             }
@@ -196,7 +275,7 @@ public class MapController {
                 // if the target position is within vision
                 if(inVision(x, y, tempX, tempY)){
                     if(map[tempX][tempY] == Params.EMPTY |
-                            map[tempX][tempY] == Params.JAILED_AGENT){
+                            map[tempX][tempY] % Params.JAILED_AGENT == 0){
                         emptySlots.add(new int[]{tempX,tempY});
                     }
 //                    else if(map[tempX][tempY] == Params.JAILED_AGENT){
