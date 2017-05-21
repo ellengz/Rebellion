@@ -11,7 +11,7 @@ public class Params {
     public final static int MAX_MAP_YVALUE = 40;
     public final static double VISION = 7;
     public final static double COP_DENSITY = 4;
-    public final static double AGENT_DENSITY = 70;
+    public final static double AGENT_DENSITY = 80;
     public final static int MAX_JAIL_TERM = 30;
     public final static double GOVERNMENT_LEGITIMACY = 0.82;
     public final static double K_PARAM = 2.3;
