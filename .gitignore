@@ -39,3 +39,4 @@ Thumbs.db
 *.idea
 *.settings
 *.iml
+/bin/
