@@ -1,14 +1,12 @@
-package rebellion_model;
-
 import java.util.ArrayList;
 
 /**
- * Created by ellen on 18/5/17.
+ * A map controller can detect neighbours info for a patch, move all agents and cops in map, allow
+ * all agents and cops to take action, and update the map info accordingly.
  */
 public class MapController {
 
-	// a two-dimensional array that records the state of each position in the
-	// map:
+	// a two-dimensional array that records the state of each position in the map:
 	static String[][] map = new String[Params.MAX_MAP_XVALUE][Params.MAX_MAP_YVALUE];
 	// a list that contains all the agents
 	ArrayList<Agent> agents = new ArrayList<>();
@@ -43,9 +41,7 @@ public class MapController {
 				// decrease the jailed term by 1s
 				agent.updateTerm();
 			}
-
 		}
-
 	}
 
 	/**
@@ -75,7 +71,7 @@ public class MapController {
 	}
 
 	/**
-	 * the actions of the agents and cops
+	 * allow all agents and cops to take actions
 	 */
 	public void takeActionAll() {
 		// the agents decide if it will become quiet or active
@@ -130,7 +126,7 @@ public class MapController {
 	}
 
 	/**
-	 * update the map after on action
+	 * update the map after one action
 	 * 
 	 * @param x
 	 * @param y
@@ -172,7 +168,8 @@ public class MapController {
 				int tempY = (int) ((j + startingY) % Params.MAX_MAP_YVALUE);
 				// if the target position is within vision
 				if (inVision(x, y, tempX, tempY)) {
-					if (map[tempX][tempY] != null && map[tempX][tempY].indexOf(Params.ACTIVE_AGENT) != -1) {
+					if (map[tempX][tempY] != null &&
+							map[tempX][tempY].contains(Params.ACTIVE_AGENT)) {
 						activePositions.add(new int[] { tempX, tempY });
 					}
 					// get the number of agents in each slot
@@ -195,7 +192,7 @@ public class MapController {
 	/**
 	 * get the list of empty slots, including patches occupied by jailed agent
 	 * within the vision
-	 * 
+	 *
 	 * @param x
 	 * @param y
 	 * @return a list of empty slots
@@ -220,9 +217,9 @@ public class MapController {
 				if (inVision(x, y, tempX, tempY)) {
 					// if the slot is empty or just has jailed agent in it
 					if (map[tempX][tempY] == null || map[tempX][tempY].equals("")
-							|| (map[tempX][tempY].indexOf(Params.QUIET_AGENT) == -1
-									&& map[tempX][tempY].indexOf(Params.ACTIVE_AGENT) == -1
-									&& map[tempX][tempY].indexOf(Params.COP) == -1)) {
+							|| (!map[tempX][tempY].contains(Params.QUIET_AGENT)
+									&& !map[tempX][tempY].contains(Params.ACTIVE_AGENT)
+									&& !map[tempX][tempY].contains(Params.COP) )) {
 						emptySlots.add(new int[] { tempX, tempY });
 					}
 				}
@@ -242,9 +239,11 @@ public class MapController {
 	 */
 	private Boolean inVision(int x, int y, int targetX, int targetY) {
 
-		double distanceX = Math.min(Math.abs(x - targetX), Params.MAX_MAP_XVALUE - Math.abs(x - targetX));
+		double distanceX = Math.min(Math.abs(x - targetX),
+									Params.MAX_MAP_XVALUE - Math.abs(x - targetX));
 
-		double distanceY = Math.min(Math.abs(y - targetY), Params.MAX_MAP_YVALUE - Math.abs(y - targetY));
+		double distanceY = Math.min(Math.abs(y - targetY),
+									Params.MAX_MAP_YVALUE - Math.abs(y - targetY));
 
 		double radiusDistance = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
 
@@ -252,10 +251,11 @@ public class MapController {
 	}
 
 	/**
-	 * count the number of times the substr appears in the str
+	 * count how many times the sub string (a role) appears in the str
+	 *
 	 * @param str
 	 * @param subStr
-	 * @return
+	 * @return number of times
 	 */
 	public int countChar(String str, String subStr) {
 		int c = 0;

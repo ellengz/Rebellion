@@ -1,10 +1,8 @@
-package rebellion_model;
-
 import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Created by ellen on 18/5/17.
+ * An agent can move, rebel and be put in jail.
  */
 public class Agent {
 	// the unique id of an agent
@@ -23,7 +21,7 @@ public class Agent {
 	String state;
 
 	private Random randomGenerator = new Random();
-	
+
 	/**
      * create a new agent with an id
      */
@@ -38,7 +36,7 @@ public class Agent {
 	/**
 	 * move to an empty slot when the agent is quiet or active count down the
 	 * jail terms when the agent is jailed
-	 * 
+	 *
 	 * @param emptySlots
 	 */
 	public void move(ArrayList<int[]> emptySlots) {
@@ -56,7 +54,7 @@ public class Agent {
 	/**
 	 * decide if an agent turns to active/ quite, according to the neighbours
 	 * and params
-	 * 
+	 *
 	 * @param neighbours
 	 */
 	public void ifRebellion(ArrayList neighbours) {
@@ -65,17 +63,17 @@ public class Agent {
 			int copNum = (int) neighbours.get(1);
 			int activeNum = (int) neighbours.get(3) + 1;
 			// the possibility of an agent to be arrested
-			double eArrestProbability = 1 - Math.exp(-Params.K_PARAM * Math.floor(copNum / activeNum));
-			
+			double eArrestProbability = 1- Math.exp(-Params.K_PARAM * Math.floor(copNum/activeNum));
+
 			// get the government legitimacy
 			double legitimacy = Params.GOVERNMENT_LEGITIMACY;
 			// if use the extension method
 			if(Params.EXTENT){
-				int jaildNum = (int) neighbours.get(4);
+				int jailedNum = (int) neighbours.get(4);
 				// the government legitimacy increases proportionally with the number of nearby jailed agents
-				legitimacy += jaildNum * Params.LEGITIMACY_COE;
+				legitimacy += jailedNum * Params.LEGITIMACY_COE;
 			}
-			
+
 			// the grievance of an agent
 			double grievance = this.perceivedHardship * (1 - legitimacy);
 			// decide if an agent turns from quite to active or vice verse
@@ -85,7 +83,6 @@ public class Agent {
 				this.setState(Params.QUIET_AGENT);
 			}
 		}
-		// System.out.println(this.toString());
 	}
 
 	/**
@@ -96,13 +93,6 @@ public class Agent {
 		this.jailTerm = randomGenerator.nextInt(Params.MAX_JAIL_TERM)+1;
 		// set the state of the agent to jailed
 		this.setState(Params.JAILED_AGENT);
-	}
-
-	/**
-     * get the id of the agent
-     */
-	public int getId() {
-		return id;
 	}
 
 	/**
@@ -165,9 +155,10 @@ public class Agent {
      * get the relative info about the agent in string format
      */
 	public String toString() {
-		return id + "    " + String.format("%.15f", riskAversion) + "    " + String.format("%.15f", perceivedHardship)
-				+ "    " + String.format("%03d", positionX) + "    " + String.format("%03d", positionY) + "    "
-				+ state;
+		return id + "    " + String.format("%.15f", riskAversion) + "    "
+				+ String.format("%.15f", perceivedHardship) + "    "
+				+ String.format("%03d", positionX) + "    " + String.format("%03d", positionY)
+				+ "    " + state;
 	}
 
 }

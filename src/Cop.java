@@ -1,10 +1,8 @@
-package rebellion_model;
-
 import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * A cop can move and arrest the agents
+ * A cop can move and arrest the active agent.
  */
 public class Cop {
 
@@ -53,13 +51,6 @@ public class Cop {
         }else{
             return null;
         }
-    }
-    
-    /**
-     * get the id of the cop
-     */
-    public int getId() {
-        return id;
     }
     
     /**

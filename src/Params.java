@@ -1,10 +1,8 @@
-package rebellion_model;
-
 /**
  * Created by ellen on 18/5/17.
  */
 /**
- * Parameters that influence the behaviour of the system
+ * Parameters that influence the behaviour of the system.
  */
 public class Params {
 	// the max number of columns in the map
@@ -34,7 +32,7 @@ public class Params {
 	public final static String ACTIVE_AGENT = "a";
 	public final static String JAILED_AGENT = "j";
 	// the switch of the extension function, true is on, false is off
-	public final static boolean EXTENT = true;
+	public final static boolean EXTENT = false;
 	// the switch of the agent movement, true is on, false is off
 	public final static boolean MOVEMENT = true;
 	// the parameter to decide the influence of the jailed number to the
