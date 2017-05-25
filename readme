@@ -1,0 +1,8 @@
+Please follow the steps below to run our project:
+
+1. go to folder src
+2. make Sim.class
+3. java Sim
+
+When it’s done, you can find the outputs in outputs.csv
+Parameters can be changed in src/Params.java

@@ -1,7 +1,4 @@
 /**
- * Created by ellen on 18/5/17.
- */
-/**
  * Parameters that influence the behaviour of the system.
  */
 public class Params {
