@@ -4,9 +4,8 @@ import java.util.Random;
 /**
  * An agent can move, rebel and be put in jail.
  */
-public class Agent {
-	// the unique id of an agent
-	int id;
+public class Agent extends Turtle{
+
 	// a random number range from 0-1, fixed for the agent's lifetime
 	double riskAversion;
 	// a random number range from 0-1, fixed for the agent's lifetime
@@ -14,10 +13,6 @@ public class Agent {
 	// the number of remaining turns for the agent to be in jail
 	int jailTerm;
 	// the x-coordinate of the agent in the map
-	int positionX;
-	// the y-coordinate of the agent in the map
-	int positionY;
-	// the state of an agent
 	String state;
 
 	private Random randomGenerator = new Random();
@@ -26,7 +21,7 @@ public class Agent {
      * create a new agent with an id
      */
 	public Agent(int id) {
-		this.id = id;
+		super(id);
 		this.riskAversion = Math.random();
 		this.perceivedHardship = Math.random();
 		this.jailTerm = 0;
@@ -39,6 +34,8 @@ public class Agent {
 	 *
 	 * @param emptySlots
 	 */
+
+	@Override
 	public void move(ArrayList<int[]> emptySlots) {
 		// only if the agent is not in jail, it can move
 		if (this.jailTerm == 0) {
@@ -93,34 +90,6 @@ public class Agent {
 		this.jailTerm = randomGenerator.nextInt(Params.MAX_JAIL_TERM)+1;
 		// set the state of the agent to jailed
 		this.setState(Params.JAILED_AGENT);
-	}
-
-	/**
-     * get the position X of the agent
-     */
-	public int getPositionX() {
-		return positionX;
-	}
-
-	/**
-     * set the position X of the agents
-     */
-	public void setPositionX(int positionX) {
-		this.positionX = positionX;
-	}
-
-	/**
-     * get the position Y of the agent
-     */
-	public int getPositionY() {
-		return positionY;
-	}
-
-	/**
-     * set the position Y of the agent
-     */
-	public void setPositionY(int positionY) {
-		this.positionY = positionY;
 	}
 
 	/**
